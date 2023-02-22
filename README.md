@@ -36,7 +36,8 @@ for (i in 1:365) {
   print(paste("Step", get_step(sim)))
 }
 
-get_table_data(sim, "Daily", "Skipjack tuna Catches (kg)") |>
+sim |> 
+  get_table_data("Daily", "Skipjack tuna Catches (kg)") |>
   plot()
 ```
 
