@@ -13,4 +13,6 @@ Imports:
     rJava,
     rlang,
     vctrs,
-    purrr
+    purrr,
+    lubridate,
+    tibble

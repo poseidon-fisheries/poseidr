@@ -1,7 +1,9 @@
 #' @export
 load_scenario <- \(scenario_path) {
-  rJava::.jnew("uk/ac/ox/poseidon/r/YamlScenarioLoader") |>
-    rJava::.jcall("Luk/ac/ox/poseidon/simulations/api/Scenario;", "load", scenario_path)
+  try_java(
+    rJava::.jnew("uk/ac/ox/poseidon/r/YamlScenarioLoader") |>
+      rJava::.jcall("Luk/ac/ox/poseidon/simulations/api/Scenario;", "load", scenario_path)
+  )
 }
 
 #' @export
@@ -12,9 +14,11 @@ new_simulation <- \(scenario_object) {
 
 #' @export
 get_input_folder <- \(scenario_object) {
-  scenario_object |>
-    rJava::.jcall("Ljava/nio/file/Path;", "getInputFolder") |>
-    rJava::.jcall("S", "toString")
+  try_java(
+    scenario_object |>
+      rJava::.jcall("Ljava/nio/file/Path;", "getInputFolder") |>
+      rJava::.jcall("S", "toString")
+  )
 }
 
 #' @export
@@ -28,12 +32,14 @@ set_input_folder <- \(scenario_object, ...) {
   }
   args_vec <- sapply(args_list, enc2utf8)
   n <- vctrs::vec_size(args_vec)
-  scenario_object |>
-    rJava::.jcall(
-      "V",
-      "setInputFolder",
-      args_vec[1],
-      if (n > 1) rJava::.jarray(args_vec[2:n]) else character()
-    )
+  try_java(
+    scenario_object |>
+      rJava::.jcall(
+        "V",
+        "setInputFolder",
+        args_vec[1],
+        if (n > 1) rJava::.jarray(args_vec[2:n]) else character()
+      )
+  )
   scenario_object
 }
