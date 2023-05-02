@@ -2,10 +2,10 @@ options(java.parameters = "-Xmx8g")
 load_all()
 
 input_folder <-
-  fs::path_home("workspace", "POSEIDON", "inputs", "epo_inputs")
+  fs::path_home("workspace", "POSEIDON", "POSEIDON", "inputs", "epo_inputs")
 
 scenario_path <-
-  fs::path(input_folder, "tests", "scenarios", "EpoScenarioPathfinding.yaml")
+  fs::path(input_folder, "tests", "scenarios", "EpoPathPlannerAbundanceScenario.yaml")
 
 scenario <-
   load_scenario(scenario_path) |>
