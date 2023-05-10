@@ -11,9 +11,19 @@ scenario <-
   load_scenario(scenario_path) |>
   set_input_folder(input_folder)
 
+scenario |>
+  get_parameter_value("purseSeinerFleetFactory.destinationStrategyFactory.fadModuleFactory.dampen")
+
+scenario |>
+  set_parameter_value("purseSeinerFleetFactory.destinationStrategyFactory.fadModuleFactory.dampen", 0.75)
+
+scenario |>
+  get_parameter_value("purseSeinerFleetFactory.destinationStrategyFactory.fadModuleFactory.dampen")
+
 sim <-
   scenario |>
   new_simulation()
+
 
 for (i in 1:365) {
   step(sim)
