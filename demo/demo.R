@@ -29,7 +29,11 @@ for (i in 1:365) {
   step(sim)
   print(paste("Step", get_step(sim)))
 }
+#
+actions <-
+  sim |>
+  get_table_data("Purse-seiner events", "Actions")
 
-sim |>  get_table_data("Purse-seiner events", "Actions")
-
-sim |>  get_table_data("Purse-seiner events", "Trips")
+trips <-
+  sim |>
+  get_table_data("Purse-seiner events", "Trips")
