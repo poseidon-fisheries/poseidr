@@ -1,5 +1,5 @@
 options(java.parameters = "-Xmx8g")
-load_all()
+devtools::load_all()
 
 input_folder <-
   fs::path_home("workspace", "POSEIDON", "POSEIDON", "inputs", "epo_inputs")
@@ -45,4 +45,5 @@ actions <-
 
 trips <-
   sim |>
-  get_table_data("Purse-seiner events", "Trips")
+  get_dataset("Purse-seiner events") |>
+  get_table("Trips")
