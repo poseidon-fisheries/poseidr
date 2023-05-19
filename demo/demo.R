@@ -24,7 +24,7 @@ sim <-
   scenario |>
   new_simulation()
 
-sim |> step(365)
+sim |> step(1)
 
 get_dataset_names(sim)
 
