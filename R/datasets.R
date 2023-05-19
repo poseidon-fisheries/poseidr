@@ -4,32 +4,50 @@ get_dataset_names <- \(simulation_object) {
     simulation_object |>
       rJava::.jcall("Ljava/util/Map;", "getDatasets") |>
       rJava::.jcall("Ljava/util/Set;", "keySet") |>
-      sapply(rJava::.jsimplify)
+      simplify_list()
   )
 }
 
 #' @export
-get_table_names <- \(simulation_object, dataset_name) {
+get_dataset <- \(simulation_object, dataset_name) {
+  key <- make_java_map_key(dataset_name)
   try_java(
     simulation_object |>
-      get_java_dataset(dataset_name) |>
+      rJava::.jcall("Ljava/util/Map;", "getDatasets") |>
+      rJava::.jcall("Ljava/lang/Object;", "get", key)
+  )
+}
+
+simplify_list <- \(xs) {
+  xs |>
+    as.list() |>
+    purrr::map(simplify, .progress = TRUE) |>
+    purrr::list_simplify()
+}
+
+#' @export
+get_table_names <- \(dataset_object) {
+  try_java(
+    dataset_object |>
       rJava::.jcall("Ljava/util/List;", "getTableNames") |>
-      sapply(rJava::.jsimplify)
+      simplify_list()
   )
 }
 
 #' @export
-get_table_data <- \(simulation_object, dataset_name, table_name) {
+get_table <- \(dataset_object, table_name) {
   table <-
-    simulation_object |>
-    get_java_table(dataset_name, table_name)
+    dataset_object |>
+    get_java_table(table_name)
   column_names <-
     table |>
     rJava::.jcall("Ljava/util/List;", "getColumnNames") |>
-    sapply(rJava::.jsimplify)
+    simplify_list()
   table |>
     rJava::.jcall("Ljava/util/Collection;", "getColumns") |>
-    lapply(\(c) purrr::list_simplify(lapply(c, simplify))) |>
+    as.list() |>
+    purrr::map(as.list, .progress = TRUE) |>
+    purrr::map(simplify_list, .progress = TRUE) |>
     set_names(column_names) |>
     tibble::as_tibble()
 }
@@ -52,20 +70,10 @@ simplify <- \(x) {
   }
 }
 
-get_java_dataset <- \(simulation_object, dataset_name) {
-  key <- make_java_map_key(dataset_name)
-  try_java(
-    simulation_object |>
-      rJava::.jcall("Ljava/util/Map;", "getDatasets") |>
-      rJava::.jcall("Ljava/lang/Object;", "get", key)
-  )
-}
-
-get_java_table <- \(simulation_object, dataset_name, table_name) {
+get_java_table <- \(dataset_object, table_name) {
   key <- try_java(rJava::.jnew("java/lang/String", table_name))
   try_java(
-    simulation_object |>
-      get_java_dataset(dataset_name) |>
+    dataset_object |>
       rJava::.jcall("Luk/ac/ox/poseidon/datasets/api/Table;", "getTable", key)
   )
 }

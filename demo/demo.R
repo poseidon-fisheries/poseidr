@@ -24,15 +24,24 @@ sim <-
   scenario |>
   new_simulation()
 
+sim |> step(365)
 
-for (i in 1:365) {
-  step(sim)
-  print(paste("Step", get_step(sim)))
-}
-#
+get_dataset_names(sim)
+
+yearly_time_series <- sim |> get_dataset("Yearly time series")
+
+sim |>
+  get_dataset("Yearly time series") |>
+  get_table_names()
+
+sim |>
+  get_dataset("Yearly time series") |>
+  get_table("Total Hours Out")
+
 actions <-
   sim |>
-  get_table_data("Purse-seiner events", "Actions")
+  get_dataset("Purse-seiner events") |>
+  get_table("Actions")
 
 trips <-
   sim |>
