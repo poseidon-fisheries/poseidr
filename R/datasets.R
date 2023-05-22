@@ -58,7 +58,8 @@ get_table <- \(dataset_object, table_name) {
         name = paste("Extracting", table_name, "table")
       )
     ) |>
-    tibble::as_tibble()
+    tibble::as_tibble() |>
+    readr::type_convert()
 }
 
 simplify <- \(x) {
@@ -67,12 +68,7 @@ simplify <- \(x) {
   } else {
     o <- rJava::.jsimplify(x)
     if (inherits(o, "jobjRef")) {
-      s <- rJava::.jcall(o, "S", "toString")
-      if (rJava::.jinstanceof(o, "java.time.LocalDateTime")) {
-        lubridate::parse_date_time(s, "ymdHMS", truncated = 3)
-      } else {
-        s
-      }
+      rJava::.jcall(o, "S", "toString")
     } else {
       o
     }

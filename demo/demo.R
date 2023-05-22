@@ -28,10 +28,19 @@ sim |> step(365)
 
 get_dataset_names(sim)
 
-actions <-
+daily_time_series <-
   sim |>
-  get_dataset("Purse-seiner events") |>
-  get_table("Actions")
+  get_dataset("Daily time series")
+
+daily_time_series |>
+  get_table_names() |>
+  purrr::chuck(1) |>
+  purrr::map(\(table) daily_time_series |> get_table(table))
+
+# actions <-
+#   sim |>
+#   get_dataset("Purse-seiner events") |>
+#   get_table("Actions")
 
 # trips <-
 #   sim |>

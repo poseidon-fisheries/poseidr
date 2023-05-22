@@ -8,8 +8,10 @@ load_scenario <- \(scenario_path) {
 
 #' @export
 new_simulation <- \(scenario_object) {
-  scenario_object |>
-    rJava::.jcall("Luk/ac/ox/poseidon/simulations/api/Simulation;", "newSimulation")
+  try_java(
+    scenario_object |>
+      rJava::.jcall("Luk/ac/ox/poseidon/simulations/api/Simulation;", "newSimulation")
+  )
 }
 
 #' @export

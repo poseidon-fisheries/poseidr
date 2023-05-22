@@ -1,5 +1,5 @@
 try_java <- \(expr) {
-  try_fetch(
+  rlang::try_fetch(
     expr,
     Exception = \(e) {
       abort(

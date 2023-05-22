@@ -14,5 +14,6 @@ Imports:
     rlang,
     vctrs,
     purrr,
+    readr,
     lubridate,
     tibble
