@@ -18,10 +18,10 @@ get_dataset <- \(simulation_object, dataset_name) {
   )
 }
 
-simplify_list <- \(xs) {
+simplify_list <- \(xs, progress = TRUE) {
   xs |>
     as.list() |>
-    purrr::map(simplify, .progress = TRUE) |>
+    purrr::map(simplify, .progress = progress) |>
     purrr::list_simplify()
 }
 
@@ -42,13 +42,22 @@ get_table <- \(dataset_object, table_name) {
   column_names <-
     table |>
     rJava::.jcall("Ljava/util/List;", "getColumnNames") |>
-    simplify_list()
+    simplify_list(paste("Getting", table_name, "column names"))
   table |>
     rJava::.jcall("Ljava/util/Collection;", "getColumns") |>
     as.list() |>
-    purrr::map(as.list, .progress = TRUE) |>
-    purrr::map(simplify_list, .progress = TRUE) |>
     set_names(column_names) |>
+    purrr::map2(
+      column_names,
+      \(col, column_name) simplify_list(
+        col,
+        paste("Extracting", column_name, "column")
+      ),
+      .progress = list(
+        show_after = 1,
+        name = paste("Extracting", table_name, "table")
+      )
+    ) |>
     tibble::as_tibble()
 }
 
