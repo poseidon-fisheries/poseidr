@@ -18,13 +18,6 @@ get_dataset <- \(simulation_object, dataset_name) {
   )
 }
 
-simplify_list <- \(xs, progress = TRUE) {
-  xs |>
-    as.list() |>
-    purrr::map(simplify, .progress = progress) |>
-    purrr::list_simplify()
-}
-
 #' @export
 get_table_names <- \(dataset_object) {
   try_java(
@@ -60,19 +53,6 @@ get_table <- \(dataset_object, table_name) {
     ) |>
     tibble::as_tibble() |>
     readr::type_convert()
-}
-
-simplify <- \(x) {
-  if (rJava::is.jnull(x)) {
-    NA
-  } else {
-    o <- rJava::.jsimplify(x)
-    if (inherits(o, "jobjRef")) {
-      rJava::.jcall(o, "S", "toString")
-    } else {
-      o
-    }
-  }
 }
 
 get_java_table <- \(dataset_object, table_name) {

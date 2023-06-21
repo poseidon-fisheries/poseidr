@@ -8,8 +8,13 @@ scenario_path <-
   fs::path(input_folder, "tests", "scenarios", "EpoPathPlannerAbundanceScenario.yaml")
 
 scenario <-
-  load_scenario(scenario_path) |>
-  set_input_folder(input_folder)
+  load_scenario(scenario_path)
+
+scenario |>
+  get_parameters()
+
+scenario |>
+  set_parameter_value("inputFolder.path", input_folder)
 
 scenario |>
   get_parameter_value("purseSeinerFleetFactory.destinationStrategyFactory.fadModuleFactory.dampen")
@@ -24,7 +29,7 @@ sim <-
   scenario |>
   new_simulation()
 
-sim |> step(365)
+sim |> step(36)
 
 get_dataset_names(sim)
 
