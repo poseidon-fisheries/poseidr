@@ -2,7 +2,7 @@ options(java.parameters = "-Xmx8g")
 devtools::load_all()
 
 input_folder <-
-  fs::path_home("workspace", "POSEIDON", "POSEIDON", "inputs", "epo_inputs")
+  fs::path_home("workspace", "epo_inputs")
 
 scenario_path <-
   fs::path(input_folder, "tests", "scenarios", "EpoPathPlannerAbundanceScenario.yaml")
@@ -42,12 +42,12 @@ daily_time_series |>
   purrr::chuck(1) |>
   purrr::map(\(table) daily_time_series |> get_table(table))
 
-# actions <-
-#   sim |>
-#   get_dataset("Purse-seiner events") |>
-#   get_table("Actions")
+actions <-
+  sim |>
+  get_dataset("Purse-seiner events") |>
+  get_table("Actions")
 
-# trips <-
-#   sim |>
-#   get_dataset("Purse-seiner events") |>
-#   get_table("Trips")
+subtrips <-
+  sim |>
+  get_dataset("Purse-seiner events") |>
+  get_table("Trips")
