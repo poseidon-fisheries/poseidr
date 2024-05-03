@@ -42,17 +42,26 @@ get_table <- \(dataset_object, table_name) {
     set_names(column_names) |>
     purrr::map2(
       column_names,
-      \(col, column_name) simplify_list(
-        col,
-        paste("Extracting", column_name, "column")
-      ),
+      \(col, column_name) {
+        array <-
+          col |>
+          rJava::.jcall("Ljava/lang/Object;", "toArray") |>
+          rJava::.jevalArray()
+        if (rlang::is_atomic(array)) {
+          class(array) <-
+            col |>
+            rJava::.jcall("[Ljava/lang/String;", "getS3Classes")
+          array
+        } else {
+          simplify_list(array, paste("Extracting", column_name, "column"))
+        }
+      },
       .progress = list(
         show_after = 1,
         name = paste("Extracting", table_name, "table")
       )
     ) |>
-    tibble::as_tibble() |>
-    readr::type_convert()
+    tibble::as_tibble()
 }
 
 get_java_table <- \(dataset_object, table_name) {
