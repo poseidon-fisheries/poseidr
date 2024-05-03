@@ -45,8 +45,7 @@ get_table <- \(dataset_object, table_name) {
       \(col, column_name) {
         array <-
           col |>
-          rJava::.jcall("Ljava/lang/Object;", "toArray") |>
-          rJava::.jevalArray()
+          rJava::.jcall("Ljava/lang/Object;", "toArray", use.true.class = TRUE)
         if (rlang::is_atomic(array)) {
           class(array) <-
             col |>
