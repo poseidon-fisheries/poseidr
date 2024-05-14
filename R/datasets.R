@@ -50,10 +50,8 @@ get_table <- \(dataset_object, table_name) {
           class(array) <-
             col |>
             rJava::.jcall("[Ljava/lang/String;", "getS3Classes")
-          array
-        } else {
-          simplify_list(array, paste("Extracting", column_name, "column"))
         }
+        array
       },
       .progress = list(
         show_after = 1,

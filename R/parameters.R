@@ -43,6 +43,5 @@ set_parameter_value <- \(scenario_object, parameter_name, value) {
         rJava::.jcast(obj)
       )
   })
-  scenario_object |>
-    get_parameter_value(parameter_name)
+  scenario_object
 }
