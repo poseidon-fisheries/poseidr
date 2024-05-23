@@ -9,7 +9,8 @@ get_parameters <- \(scenario_object) {
           rJava::.jcall("S", "getName"),
         value = p |>
           rJava::.jcall("Ljava/lang/Object;", "getValue") |>
-          rJava::.jcall("S", "toString")
+          simplify() |>
+          list()
       )) |>
       purrr::list_rbind()
   )
