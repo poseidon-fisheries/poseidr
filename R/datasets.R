@@ -2,9 +2,7 @@
 get_dataset_names <- \(simulation_object) {
   try_java(
     simulation_object |>
-      rJava::.jcall("Ljava/util/Map;", "getDatasets") |>
-      rJava::.jcall("Ljava/util/Set;", "keySet") |>
-      simplify_list()
+      rJava::.jcall("[Ljava/lang/String;", "getDatasetNames")
   )
 }
 
@@ -22,8 +20,7 @@ get_dataset <- \(simulation_object, dataset_name) {
 get_table_names <- \(dataset_object) {
   try_java(
     dataset_object |>
-      rJava::.jcall("Ljava/util/List;", "getTableNames") |>
-      simplify_list()
+      rJava::.jcall("[Ljava/lang/String;", "getTableNames")
   )
 }
 
@@ -59,6 +56,30 @@ get_table <- \(dataset_object, table_name) {
       )
     ) |>
     tibble::as_tibble()
+}
+
+#' @export
+get_all_tables <- \(simulation_object) {
+  simulation_object |>
+    get_dataset_names() |>
+    purrr::map(\(dataset_name) {
+      tibble::tibble(
+        dataset_name,
+        table =
+          dataset_name |>
+            purrr::map(\(dataset_name) {
+              dataset <-
+                simulation_object |>
+                get_dataset(dataset_name)
+              tibble::tibble(
+                table_name = get_table_names(dataset),
+                table = table_name |> purrr::map(~ get_table(dataset, .))
+              )
+            })
+      )
+    }) |>
+    purrr::list_rbind() |>
+    tidyr::unnest(table)
 }
 
 get_java_table <- \(dataset_object, table_name) {
