@@ -20,7 +20,7 @@ step <- \(simulation_objects, num_steps = 1) {
 #' @export
 get_step <- \(simulation_objects) {
   try_java(
-    simulation_objects |>
+    c(simulation_objects) |>
       purrr::map_int(\(sim) sim |> rJava::.jcall("I", "getStep"))
   )
 }
