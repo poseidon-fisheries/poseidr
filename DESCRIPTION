@@ -14,11 +14,8 @@ Imports:
     rlang,
     vctrs,
     purrr,
-    readr,
-    lubridate,
     tibble,
     tidyr,
     lifecycle,
     cli,
-    glue,
-    withr
+    glue

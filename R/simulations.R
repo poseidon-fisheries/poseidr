@@ -1,11 +1,11 @@
 #' @export
-step <- \(simulation_objects, num_steps = 1) {
-  num_sims <- length(simulation_objects)
+step <- \(simulations, num_steps = 1) {
+  num_sims <- length(simulations)
   cli::pluralize("Stepping {num_sims} simulation{?s} {num_steps} time{?s}") |>
     cli::cli_progress_bar(total = num_steps)
   try_java({
     simulation_array <-
-      simulation_objects |>
+      simulations |>
       rJava::.jarray(
         contents.class = "uk/ac/ox/poseidon/simulations/api/Simulation"
       )
@@ -14,13 +14,22 @@ step <- \(simulation_objects, num_steps = 1) {
       cli::cli_progress_update()
     }
   })
-  simulation_objects
+  simulations
 }
 
+#' Returns the current time step of simulations.
+#'
+#' `get_step()` returns a numeric vector indicating the current time step of
+#' each referenced simulation object. Those time steps usually (but not
+#' necessarily) represent days.
+#' @param simulations Either a single reference to a simulation object or a list
+#'   of such references.
+#' @returns A numeric vector of the same length as `simulations`.
+#'
 #' @export
-get_step <- \(simulation_objects) {
+get_step <- \(simulations) {
   try_java(
-    c(simulation_objects) |>
+    c(simulations) |>
       purrr::map_int(\(sim) sim |> rJava::.jcall("I", "getStep"))
   )
 }
